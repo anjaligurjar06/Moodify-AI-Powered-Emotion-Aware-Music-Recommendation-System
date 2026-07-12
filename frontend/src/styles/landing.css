@@ -1,0 +1,134 @@
+/* ============================================================
+   Landing page — hero, features, how-it-works, cta
+   ============================================================ */
+
+/* ---------- Hero ---------- */
+.hero { padding: 100px 0 70px; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 60px; align-items: center; }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.4vw, 68px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  margin: 22px 0 22px;
+}
+.hero h1 .accent {
+  background: var(--gradient-mood);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero p.sub { font-size: 18px; color: var(--text-muted); max-width: 480px; margin-bottom: 34px; }
+.hero-actions { display: flex; gap: 14px; align-items: center; margin-bottom: 40px; }
+
+.emotion-strip { display: flex; flex-wrap: wrap; gap: 10px; }
+.emotion-tag {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  color: var(--text-muted);
+}
+.emotion-tag.happy { border-color: rgba(255,180,84,.4); color: var(--amber); }
+.emotion-tag.sad { border-color: rgba(79,224,214,.35); color: var(--cyan); }
+.emotion-tag.angry { border-color: rgba(255,107,157,.4); color: var(--rose); }
+.emotion-tag.calm { border-color: rgba(155,107,255,.4); color: var(--violet); }
+
+/* ---------- Waveform card (signature element) ---------- */
+.waveform-card {
+  background: linear-gradient(155deg, var(--surface), var(--ink-soft));
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  position: relative;
+  overflow: hidden;
+}
+.waveform-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 320px; height: 320px;
+  background: var(--gradient-mood);
+  filter: blur(90px);
+  opacity: 0.28;
+  pointer-events: none;
+}
+.waveform-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; position: relative; z-index: 1; }
+.waveform-head .mood-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .1em; }
+.waveform-head .mood-value { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-top: 4px; transition: opacity 0.25s ease; }
+
+.live-badge {
+  font-family: var(--font-mono); font-size: 11px; color: var(--cyan);
+  border: 1px solid rgba(79,224,214,.35); border-radius: 999px; padding: 4px 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.live-badge .ping { width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); animation: pulseDot 1.6s ease-in-out infinite; }
+
+.bars { display: flex; align-items: flex-end; gap: 5px; height: 140px; position: relative; z-index: 1; }
+.bars span { flex: 1; border-radius: 4px; background: var(--gradient-mood); animation: bar-move 1.8s ease-in-out infinite; opacity: 0.9; }
+@keyframes bar-move { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+
+.waveform-foot { display: flex; justify-content: space-between; margin-top: 22px; font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); position: relative; z-index: 1; }
+
+/* ---------- Trust strip ---------- */
+.trust { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 26px 0; }
+.trust .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-family: var(--font-mono); font-size: 12.5px; color: var(--text-faint); letter-spacing: .04em; }
+
+/* ---------- Sections ---------- */
+.section { padding: 100px 0; }
+.section-head { max-width: 600px; margin-bottom: 56px; }
+.section-head h2 { font-family: var(--font-display); font-size: clamp(30px, 3.6vw, 42px); margin-top: 16px; letter-spacing: -0.01em; }
+.section-head p { color: var(--text-muted); margin-top: 14px; font-size: 16px; }
+
+/* ---------- Feature cards ---------- */
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.feature-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-md); padding: 30px; transition: transform .2s ease, border-color .2s ease; }
+.feature-card:hover { transform: translateY(-4px); border-color: var(--violet-dim); }
+.feature-card .icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 19px; }
+.feature-card.face .icon { background: rgba(155,107,255,.15); color: var(--violet); }
+.feature-card.text .icon { background: rgba(255,180,84,.15); color: var(--amber); }
+.feature-card.voice .icon { background: rgba(79,224,214,.15); color: var(--cyan); }
+.feature-card h3 { font-family: var(--font-display); font-size: 19px; margin-bottom: 10px; }
+.feature-card p { color: var(--text-muted); font-size: 14.5px; }
+.feature-card .tag { display: inline-block; margin-top: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); border-top: 1px solid var(--hairline); padding-top: 14px; width: 100%; }
+
+/* ---------- How it works ---------- */
+.how { background: var(--ink-soft); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.step { padding: 26px 24px; border-left: 1px solid var(--hairline); position: relative; }
+.step:first-child { border-left: none; padding-left: 0; }
+.step .num { font-family: var(--font-mono); font-size: 12px; color: var(--violet); margin-bottom: 14px; display: block; }
+.step h4 { font-family: var(--font-display); font-size: 17px; margin-bottom: 8px; }
+.step p { color: var(--text-muted); font-size: 14px; }
+
+/* ---------- Mood mapping table ---------- */
+.mood-table { margin-top: 60px; border: 1px solid var(--hairline); border-radius: var(--radius-md); overflow: hidden; }
+.mood-row { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1.4fr; padding: 16px 24px; border-bottom: 1px solid var(--hairline); align-items: center; font-size: 13.5px; }
+.mood-row:last-child { border-bottom: none; }
+.mood-row.head { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .08em; background: rgba(255,255,255,0.02); }
+.mood-row .swatch { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 10px; }
+.mood-row .genres { color: var(--text-muted); }
+
+/* ---------- Final CTA ---------- */
+.cta-final { padding: 110px 0; text-align: center; }
+.cta-final h2 { font-family: var(--font-display); font-size: clamp(32px, 4.4vw, 52px); letter-spacing: -0.02em; margin-bottom: 20px; }
+.cta-final p { color: var(--text-muted); margin-bottom: 34px; }
+.cta-final .btn { padding: 15px 34px; font-size: 16px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .step { border-left: none; border-top: 1px solid var(--hairline); padding-left: 0; }
+  .step:nth-child(odd) { padding-right: 20px; }
+  .mood-row { grid-template-columns: 1fr 1fr; row-gap: 6px; }
+  .mood-row .genres { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .wrap { padding: 0 20px; }
+  .steps { grid-template-columns: 1fr; }
+  .hero-actions { flex-wrap: wrap; }
+}

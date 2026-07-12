@@ -1,0 +1,142 @@
+/* ============================================================
+   MOODIFY — Design Tokens
+   ============================================================ */
+:root {
+  --ink: #100e1c;
+  --ink-soft: #16132a;
+  --surface: #1c1832;
+  --surface-raised: #26213f;
+  --hairline: rgba(243, 241, 250, 0.09);
+
+  --text-primary: #f3f1fa;
+  --text-muted: #9c96b8;
+  --text-faint: #6b6688;
+
+  --violet: #9b6bff;
+  --violet-dim: #6a4bb3;
+  --amber: #ffb454;
+  --cyan: #4fe0d6;
+  --rose: #ff6b9d;
+
+  --gradient-mood: linear-gradient(120deg, var(--violet), var(--rose) 45%, var(--amber) 75%, var(--cyan));
+
+  --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  --max-w: 1200px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+img, svg { display: block; max-width: 100%; }
+
+.wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before { content: ""; width: 14px; height: 1px; background: var(--violet); }
+
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 999px;
+  padding: 13px 26px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, border-color .18s ease;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-primary { background: var(--text-primary); color: var(--ink); }
+.btn-primary:hover { box-shadow: 0 0 0 4px rgba(155, 107, 255, 0.25); transform: translateY(-1px); }
+
+.btn-ghost { background: transparent; color: var(--text-primary); border-color: var(--hairline); }
+.btn-ghost:hover { border-color: var(--violet); color: var(--violet); }
+
+.btn-block { width: 100%; justify-content: center; }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(16, 14, 28, 0.72);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hairline);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo .dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--gradient-mood);
+  animation: pulseDot 2.4s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+}
+
+.nav-links { display: flex; gap: 36px; font-size: 14.5px; color: var(--text-muted); }
+.nav-links a:hover { color: var(--text-primary); }
+.nav-cta { display: flex; gap: 12px; align-items: center; }
+
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .btn-ghost.nav-only { display: none; }
+}
+
+/* ---------- Footer ---------- */
+footer { border-top: 1px solid var(--hairline); padding: 40px 0; }
+footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--text-faint);
+  font-size: 13px;
+}
