@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import MiniWaveform from "../components/MiniWaveform.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import "../styles/auth.css";
 
 function PasswordField({ id, label, value, onChange, error, placeholder, hint }) {
@@ -31,12 +32,14 @@ function PasswordField({ id, label, value, onChange, error, placeholder, hint })
 }
 
 function LoginForm() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const nextErrors = {};
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) nextErrors.email = "Enter a valid email address.";
@@ -45,11 +48,14 @@ function LoginForm() {
     if (Object.keys(nextErrors).length) return;
 
     setSubmitting(true);
-    // Replace with: await fetch("/api/auth/login", { method: "POST", body: JSON.stringify({ email, password }) })
-    setTimeout(() => {
+    try {
+      await login(email, password);
+      navigate("/detect");
+    } catch (err) {
+      setErrors({ form: err.message || "Could not log in. Check your credentials." });
+    } finally {
       setSubmitting(false);
-      alert("Logged in — connect this to your FastAPI /api/auth/login endpoint.");
-    }, 700);
+    }
   }
 
   return (
@@ -87,13 +93,15 @@ function LoginForm() {
           <a href="#" className="link-muted">Forgot password?</a>
         </div>
 
+        {errors.form && <p className="error-msg form-error">{errors.form}</p>}
+
         <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
           {submitting ? "Please wait…" : "Log in"}
         </button>
       </form>
 
       <div className="divider">or</div>
-      <button type="button" className="btn btn-spotify">
+      <button type="button" className="btn btn-spotify" disabled title="Connect Spotify from Settings after logging in">
         <span className="dot-spotify"></span>Continue with Spotify
       </button>
     </>
@@ -101,6 +109,8 @@ function LoginForm() {
 }
 
 function RegisterForm() {
+  const { register } = useAuth();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState({});
@@ -110,7 +120,7 @@ function RegisterForm() {
     return (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const nextErrors = {};
     if (form.name.trim().length < 2) nextErrors.name = "Enter your name.";
@@ -121,11 +131,14 @@ function RegisterForm() {
     if (Object.keys(nextErrors).length || !terms) return;
 
     setSubmitting(true);
-    // Replace with: await fetch("/api/auth/register", { method: "POST", body: JSON.stringify(form) })
-    setTimeout(() => {
+    try {
+      await register(form.name, form.email, form.password);
+      navigate("/detect");
+    } catch (err) {
+      setErrors({ form: err.message || "Could not create your account." });
+    } finally {
       setSubmitting(false);
-      alert("Account created — connect this to your FastAPI /api/auth/register endpoint.");
-    }, 700);
+    }
   }
 
   return (
@@ -172,13 +185,15 @@ function RegisterForm() {
           </label>
         </div>
 
+        {errors.form && <p className="error-msg form-error">{errors.form}</p>}
+
         <button type="submit" className="btn btn-primary btn-block" disabled={submitting}>
           {submitting ? "Please wait…" : "Create account"}
         </button>
       </form>
 
       <div className="divider">or</div>
-      <button type="button" className="btn btn-spotify">
+      <button type="button" className="btn btn-spotify" disabled title="Connect Spotify from Settings after logging in">
         <span className="dot-spotify"></span>Sign up with Spotify
       </button>
     </>
