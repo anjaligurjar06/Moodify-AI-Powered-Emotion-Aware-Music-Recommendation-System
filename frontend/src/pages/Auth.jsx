@@ -1,8 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import MiniWaveform from "../components/MiniWaveform.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import { api } from "../api/client.js";
 import "../styles/auth.css";
+
+function BackendStatusBanner() {
+  const [state, setState] = useState("checking"); // checking | ok | down
+
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .health()
+      .then(() => !cancelled && setState("ok"))
+      .catch(() => !cancelled && setState("down"));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (state !== "down") return null;
+
+  return (
+    <div className="backend-warning">
+      ⚠ Can't reach the backend API. Make sure it's running — in a terminal:
+      <code> cd backend && uvicorn app.main:app --reload --port 8000</code>
+    </div>
+  );
+}
 
 function PasswordField({ id, label, value, onChange, error, placeholder, hint }) {
   const [visible, setVisible] = useState(false);
@@ -226,6 +251,7 @@ export default function Auth() {
 
       <main className="auth-panel">
         <div className="auth-card">
+          <BackendStatusBanner />
           <Link to="/" className="back">← Back to Moodify</Link>
 
           <div className="tabs" role="tablist">

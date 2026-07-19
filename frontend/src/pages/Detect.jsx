@@ -40,25 +40,46 @@ export default function Detect() {
   async function startCamera() {
     setCamError("");
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 480, height: 360 } });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 480 }, height: { ideal: 360 } },
+      });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+
+      // The <video> element is always mounted (see JSX below) so the ref
+      // is guaranteed to exist here — attaching the stream before it's in
+      // the DOM is what causes a permission-granted-but-black feed.
+      const video = videoRef.current;
+      if (video) {
+        video.srcObject = stream;
+        await new Promise((resolve) => {
+          if (video.readyState >= 1) return resolve();
+          video.onloadedmetadata = () => resolve();
+        });
+        await video.play();
       }
       setCamOn(true);
-    } catch {
-      setCamError("Couldn't access your webcam. Check browser permissions and try again.");
+    } catch (err) {
+      setCamError(
+        err?.name === "NotAllowedError"
+          ? "Camera permission was denied. Allow camera access for this site in your browser settings, then try again."
+          : "Couldn't access your webcam. Make sure no other app is using it and that you're on http://localhost."
+      );
     }
   }
 
   async function captureAndDetect() {
-    if (!videoRef.current || !canvasRef.current) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
+    if (!video.videoWidth || !video.videoHeight) {
+      setFaceStatus("Camera feed isn't ready yet — wait a second for the preview to appear, then try again.");
+      return;
+    }
+
     setFaceBusy(true);
     setFaceStatus("");
     try {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       const ctx = canvas.getContext("2d");
@@ -120,9 +141,16 @@ export default function Detect() {
             {tab === "face" ? (
               <>
                 <div className="cam-frame">
-                  {camOn ? (
-                    <video ref={videoRef} muted playsInline />
-                  ) : (
+                  {/* Always mounted so the ref exists before getUserMedia resolves —
+                      visibility is toggled with CSS, not conditional rendering. */}
+                  <video
+                    ref={videoRef}
+                    muted
+                    autoPlay
+                    playsInline
+                    style={{ display: camOn ? "block" : "none" }}
+                  />
+                  {!camOn && (
                     <div className="cam-placeholder">
                       <span>◐</span>
                       <p>Camera is off</p>

@@ -32,11 +32,23 @@ async function request(path, { method = "GET", body, auth = true, params } = {})
     if (qs) url += `?${qs}`;
   }
 
-  const res = await fetch(url, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res;
+  try {
+    res = await fetch(url, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    // fetch() throws a generic TypeError for network failures, CORS
+    // rejections, and DNS errors alike — surface something actionable.
+    throw new ApiError(
+      `Can't reach the Moodify API at ${API_URL}. Make sure the backend is running ` +
+        `(uvicorn app.main:app --reload --port 8000) and that VITE_API_URL in frontend/.env ` +
+        `matches it.`,
+      0
+    );
+  }
 
   let data = null;
   try {
